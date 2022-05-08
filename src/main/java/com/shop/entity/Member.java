@@ -40,7 +40,7 @@ public class Member {
 
         String password = passwordEncoder.encode(memberFormDto.getPassword());  // BCryptPasswordEncoder Bean을 파라미터로 넘겨 비밀번호 암호화
         member.setPassword(password);
-        member.setRole(Role.USER);
+        member.setRole(Role.ADMIN);
         return member;
     }
 
