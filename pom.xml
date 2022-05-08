@@ -79,7 +79,28 @@
 			<artifactId>thymeleaf-layout-dialect</artifactId>
 			<version>2.5.1</version>
 		</dependency>
-
+		<!-- Spring Security 의존성 추가 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<!-- 회원가입 페이지에서 유효한 값이 넘어오는지 검증하기 위한 디펜던시 추가-->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-validation</artifactId>
+		</dependency>
+		<!-- 화면을 이용하지 않고 Spring Security 테스트하기 -->
+		<dependency>
+			<groupId>org.springframework.security</groupId>
+			<artifactId>spring-security-test</artifactId>
+			<scope>test</scope>
+			<version>${spring-security.version}</version>
+		</dependency>
+		<!-- 로그인, 로그 아웃 화면 연동하-->
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+		</dependency>
 	</dependencies>
 
 	<build>
