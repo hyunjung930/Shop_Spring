@@ -13,7 +13,7 @@ import java.util.List;
 @Table(name = "orders")
 @Getter
 @Setter
-public class Order {
+public class Order extends BaseEntity{
 
     @Id
     @GeneratedValue
@@ -35,7 +35,4 @@ public class Order {
     //orphanRemoval = true : 고아객체 제거 사용위해 옵션 추가
 
     private List<OrderItem> orderItems = new ArrayList<>(); //하나의 주문이 여러개의 주문 상품을 가짐으로 List 자료형 사용.
-
-    private LocalDateTime regTime;
-    private LocalDateTime updateTime;
 }
