@@ -20,7 +20,7 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;  // 회원이 여러개의 주문을 가질 수 있음.
 
@@ -29,7 +29,7 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;        //주문상태
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     //OrderItem에 있는 Order에 의해 관리, 연관 관계의 주인의 필드인 order를 mappedBy의 값으로 셋팅.
     //cascade = CascadeType.ALL : 부모엔터티의 영속성 상태 변화를 자식 엔티티에 모두 전이.
     //orphanRemoval = true : 고아객체 제거 사용위해 옵션 추가

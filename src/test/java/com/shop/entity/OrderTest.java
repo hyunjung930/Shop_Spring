@@ -3,6 +3,7 @@ package com.shop.entity;
 import com.shop.constant.ItemSellStatus;
 import com.shop.repository.ItemRepository;
 import com.shop.repository.MemberRepository;
+import com.shop.repository.OrderItemRepository;
 import com.shop.repository.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,6 +36,29 @@ public class OrderTest {
     @Autowired
     MemberRepository memberRepository;
 
+    @Autowired
+    OrderItemRepository orderItemRepository;
+
+    @Test
+    @DisplayName("지연 로딩 테스트")
+    public void lazyLoadingTest(){
+
+        Order order = this.createOrder();   // 주문 생성 메소드를 이용해 주문 데이터를 저장.
+        Long orderItemId = order.getOrderItems().get(0).getId();
+        em.flush();
+        em.clear();
+
+        OrderItem orderItem = orderItemRepository.findById(orderItemId)
+                //영속성 컨텍스트의 상태 초기화 후 order 엔티티에 저장했던 주문 상품 아이디를 이용해 orderItem을 데이터베이스에서 다시조회.
+                .orElseThrow(EntityNotFoundException::new);
+
+        System.out.println("Order class : " + orderItem.getOrder().getClass());
+        // orderItem 엔티티에 있는 order객체의 클래스를 출력합니다. order클래스가 출력되는 것을 확인할 수 있다.
+        System.out.println("===========================");
+        orderItem.getOrder().getOrderDate();
+        System.out.println("===========================");
+    }
+
     public Order createOrder(){ //주문 만들기
         Order order = new Order();
         for(int i=0;i<3;i++){
@@ -54,7 +78,7 @@ public class OrderTest {
         return order;
     }
 
-    @Test
+    //@Test
     @DisplayName("고아 객체 테스트")
     public void orphanRemovalTest(){
         Order order = this.createOrder();
@@ -75,7 +99,7 @@ public class OrderTest {
         return item;
     }
 
-    @Test
+    //@Test
     @DisplayName("영속성 전이 테스트")
     public void cascadeTest() {
 
