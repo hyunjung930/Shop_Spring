@@ -29,9 +29,10 @@ public class Order {
     @Enumerated(EnumType.STRING)
     private OrderStatus orderStatus;        //주문상태
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
     //OrderItem에 있는 Order에 의해 관리, 연관 관계의 주인의 필드인 order를 mappedBy의 값으로 셋팅.
-    //cascade = CascadeType.ALL 부모엔터티의 영속성 상태 변화를 자식 엔티티에 모두 전이.
+    //cascade = CascadeType.ALL : 부모엔터티의 영속성 상태 변화를 자식 엔티티에 모두 전이.
+    //orphanRemoval = true : 고아객체 제거 사용위해 옵션 추가
 
     private List<OrderItem> orderItems = new ArrayList<>(); //하나의 주문이 여러개의 주문 상품을 가짐으로 List 자료형 사용.
 

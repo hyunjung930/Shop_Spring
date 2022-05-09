@@ -32,6 +32,36 @@ public class OrderTest {
     @PersistenceContext
     EntityManager em;
 
+    @Autowired
+    MemberRepository memberRepository;
+
+    public Order createOrder(){ //주문 만들기
+        Order order = new Order();
+        for(int i=0;i<3;i++){
+            Item item = createItem();
+            itemRepository.save(item);
+            OrderItem orderItem = new OrderItem();
+            orderItem.setItem(item);
+            orderItem.setCount(10);
+            orderItem.setOrderPrice(1000);
+            orderItem.setOrder(order);
+            order.getOrderItems().add(orderItem);
+        }
+        Member member = new Member();
+        memberRepository.save(member);
+        order.setMember(member);
+        orderRepository.save(order);
+        return order;
+    }
+
+    @Test
+    @DisplayName("고아 객체 테스트")
+    public void orphanRemovalTest(){
+        Order order = this.createOrder();
+        order.getOrderItems().remove(0);    // order엔티티에서 관리하는 orderItem 리스트의 0번째 인덱스 요소를 제거.
+        em.flush();
+    }
+
     public Item createItem(){   // 상품 만들기
         Item item = new Item();
         item.setItemNm("테스트 상품");
