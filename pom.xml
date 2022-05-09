@@ -94,7 +94,6 @@
 			<groupId>org.springframework.security</groupId>
 			<artifactId>spring-security-test</artifactId>
 			<scope>test</scope>
-			<version>${spring-security.version}</version>
 		</dependency>
 		<!-- 로그인, 로그 아웃 화면 연동하-->
 		<dependency>
