@@ -9,6 +9,8 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 import org.thymeleaf.util.StringUtils;
 
+import javax.persistence.EntityNotFoundException;
+
 @Service
 @RequiredArgsConstructor
 @Transactional
@@ -41,6 +43,34 @@ public class ItemImgService {   //상품 이미지 업로드, 상품 이미지 �
          */
         itemImg.updateItemImg(oriImgName, imgName, imgUrl);
         itemImgRepository.save(itemImg);
+
+    }
+
+    /**
+     * 상품 이미지 데이터 수정할 때 변경 감지 기능.
+     * @param itemImgId
+     * @param itemImgFile
+     * @throws Exception
+     */
+    public void updateItemImg(Long itemImgId, MultipartFile itemImgFile) throws Exception{
+        if(!itemImgFile.isEmpty()){ // 기존 이미지 삭제할 경우 이미지 업데이트
+            ItemImg savedITemImg = itemImgRepository.findById(itemImgId)    //상품이미지 아이디를 이용해 기존에 저장했던 상품 이미지 엔티티 조회
+                    .orElseThrow(EntityNotFoundException::new);
+
+            //기존 이미지 파일 삭제
+            if(!StringUtils.isEmpty(savedITemImg.getImgName())){    //기존에 등록된 상품이미지 파일이 있을 경우 해당 파일 삭제
+                fileService.deleteFile(itemImgLocation + "/" + savedITemImg.getImgName());
+            }
+
+            String oriImgName =  itemImgFile.getOriginalFilename();
+            String imgName = fileService.uploadFile(itemImgLocation, oriImgName, itemImgFile.getBytes());
+            //업데이트한 상품 이미지 파일 업로드
+            String imgUrl = "/images/item/" + imgName;
+
+            savedITemImg.updateItemImg(oriImgName, imgName, imgUrl);
+            //변경된 상품이미지 셋팅. itemImgRepository.save()로직 호출 x, 엔티티 영속 상태임으로 트랜잭션이 끝날 때 update 문 실행..
+        }
+
 
     }
 
