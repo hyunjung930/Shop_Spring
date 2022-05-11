@@ -112,4 +112,13 @@ public class ItemController { //상품등록페이지 접근할 수 있게 Contr
 
         return "item/itemMng";
     }
+    /**
+     * 상품 상세 페이지 이동
+     */
+    @GetMapping(value = "/item/{itemId}")
+    public String itemDtl(Model model, @PathVariable("itemId") Long itemId){
+        ItemFormDto itemFormDto = itemService.getItemDtl(itemId);
+        model.addAttribute("item", itemFormDto);
+        return "item/itemDtl";
+    }
 }
