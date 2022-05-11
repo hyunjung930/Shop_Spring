@@ -1,9 +1,14 @@
 package com.shop.controller;
 
 import com.shop.dto.ItemFormDto;
+import com.shop.dto.ItemSearchDto;
+import com.shop.entity.Item;
 import com.shop.service.ItemService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -16,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.persistence.EntityNotFoundException;
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequiredArgsConstructor
@@ -89,5 +95,21 @@ public class ItemController { //상품등록페이지 접근할 수 있게 Contr
             return "item/itemForm";
         }
         return "redirect:/";
+    }
+
+    /**
+     * 상품 관리 화면 이동 및 조회한 상품 데이터를 화면에 전달하는 로직 구현
+     */
+    @GetMapping(value = {"/admin/items","/admin/items/{page}"}) //Url에 페이지가 있는 번호와 없는 번화 두가지 맵핑.
+    public String itemManage(ItemSearchDto itemSearchDto, @PathVariable("page") Optional<Integer> page, Model model){
+
+        Pageable pageable = PageRequest.of(page.isPresent() ? page.get() :0,3);
+        //페이지 수와 가져올 데이터 수 설정, url 경로에 페이지 번호가 있으면 해당 페이지 번호 조회 없으면 0페이지 조회.
+        Page<Item> items = itemService.getAdminItemPage(itemSearchDto, pageable);   //조회 조건과 페이징 정보를 파라미터로 넘겨 Page<Item>객체 받음
+        model.addAttribute("items",items);  //조회한 상품 데이터 및 페이징 정보 뷰에 전달
+        model.addAttribute("itemSearchDto", itemSearchDto); //페이지 전환시 기존 검색을 유지한 채로 이동할 수 있도록 뷰에 전달
+        model.addAttribute("maxPage",5);    //상품 관리 메뉴 하단에 보여줄 페이지 번호 최대 개수
+
+        return "item/itemMng";
     }
 }

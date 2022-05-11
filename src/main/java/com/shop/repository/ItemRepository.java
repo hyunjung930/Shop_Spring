@@ -8,7 +8,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 
 import java.util.List;
 
-public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item> {   //QueryDslPredicateExecutor 조건 판단 근거를 함수로 제공하는 인터페이스
+public interface ItemRepository extends JpaRepository<Item, Long>, QuerydslPredicateExecutor<Item>,ItemRepositoryCustom {   //QueryDslPredicateExecutor 조건 판단 근거를 함수로 제공하는 인터페이스
 
     List<Item> findByItemNm(String itemNm); //findByItemNm: 상품의 이름을 이용한 데이터 조회 메소드
 
