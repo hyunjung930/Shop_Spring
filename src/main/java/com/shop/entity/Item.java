@@ -1,6 +1,7 @@
 package com.shop.entity;
 
 import com.shop.constant.ItemSellStatus;
+import com.shop.dto.ItemFormDto;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -37,5 +38,15 @@ public class Item extends BaseEntity{
 
     @Enumerated(EnumType.STRING)
     private ItemSellStatus itemSellStatus; //상품 판매 상태
+
+    //상품을 업데이트 하는 로직
+    //엔티티 클래스에 비즈니스 로직 추가로 객체지향적으로 코딩 및 코드 재활용, 한군데에서 관리 가능
+    public void updateItem(ItemFormDto itemFormDto){
+        this.itemNm =itemFormDto.getItemNm();
+        this.price = itemFormDto.getPrice();
+        this.stockNumber = itemFormDto.getStockNumber();
+        this.itemDetail = itemFormDto.getItemDetail();
+        this.itemSellStatus = itemFormDto.getItemSellStatus();
+    }
 
 }

@@ -69,6 +69,25 @@ public class ItemController { //상품등록페이지 접근할 수 있게 Contr
             return "item/itemForm";
         }
         return "item/itemForm";
-
+    }
+    /**
+     * 상품 수정 url 추가
+     */
+    @PostMapping(value = "/admin/item/{itemId}")
+    public String itemUpdate(@Valid ItemFormDto itemFormDto,
+                             BindingResult bindingResult, @RequestParam("itemImgFile")List<MultipartFile> itemImgFileList, Model model){
+        if(bindingResult.hasErrors()){
+            return "item/itemForm";
+        }
+        if(itemImgFileList.get(0).isEmpty() && itemFormDto.getId() == null){
+            model.addAttribute("errorMassage", "첫번째 상품 이미지는 필수 입력 값 입니다.");
+        }
+        try{
+            itemService.updateItem(itemFormDto, itemImgFileList);   //상품 수정 로직 호출.
+        }catch(Exception e){
+            model.addAttribute("errorMessage", "상품 수정 중 에러가 발생하였습니다");
+            return "item/itemForm";
+        }
+        return "redirect:/";
     }
 }
